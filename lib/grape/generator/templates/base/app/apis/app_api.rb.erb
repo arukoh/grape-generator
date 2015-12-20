@@ -1,0 +1,31 @@
+require_relative 'errors'
+
+module <%= config[:app][:name_classify] %>
+  class API < Grape::API
+    content_type :json, 'application/json'
+    format :json
+    default_format :json
+
+    rescue_from :all do |e| 
+      code = Errors::ERROR_MAPPING[e.class] || 500 
+      if code == 500 && ENV["RACK_ENV"] != "production"
+        raise e
+      else
+        error!({reason: Errors.error_reason(code)}, code)
+      end 
+    end
+
+    helpers do
+      def logger
+        env['app.logger'] #API.logger
+      end
+    end
+
+    get '/' do
+      { status: 'alive' }
+    end
+
+    # require_relative 'resources/resources_api'
+    # mount ResourcesAPI
+  end
+end

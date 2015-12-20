@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+bin_dir = File.dirname(__FILE__)
+$:.unshift File.expand_path("../lib", bin_dir)
+
+require 'grape/generator/cli'
+Grape::Generator::CLI.start(ARGV)

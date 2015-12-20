@@ -1,0 +1,27 @@
+module <%= config[:app][:name_classify] %>
+  class Errors
+    class << self
+      def error_reason(code)
+        Rack::Utils::HTTP_STATUS_CODES[code]
+      end 
+    end 
+
+    class Error < StandardError; end 
+    class AuthenticationFailed < Error; end 
+    class PermissionDenied < Error; end 
+    class TooMenyRequests < Error; end 
+    class ResourceNotFound < Error; end 
+
+    ERROR_MAPPING = { 
+      Grape::Exceptions::ValidationErrors   => 400,
+      Grape::Exceptions::InvalidMessageBody => 400,
+      ActiveRecord::RecordInvalid           => 400,
+      AuthenticationFailed                  => 401,
+      PermissionDenied                      => 403,
+      ResourceNotFound                      => 404,
+      ActiveRecord::RecordNotFound          => 404,
+      TooMenyRequests                       => 429 
+    }   
+  end 
+end
+
