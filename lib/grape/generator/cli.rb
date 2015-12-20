@@ -41,7 +41,6 @@ module Grape
           if dst.basename.to_path == "app_api.rb.erb"
             dst = dst.dirname.join("#{params[:app][:name_underscore]}_api.rb.erb")
           end
-          p dst.sub_ext("").to_path
           template(src, dst.sub_ext("").to_path, params)
         end
 

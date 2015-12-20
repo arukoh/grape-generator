@@ -1,9 +1,5 @@
 # Grape::Generator
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/grape/generator`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -30,6 +26,65 @@ Commands:
 
 Options:
   -V, [--verbose], [--no-verbose]  
+```
+
+### grape new
+
+```
+$ grape help new
+Usage:
+  grape new NAME
+
+Options:
+  -r, [--rails], [--no-rails]                  # Generate the ORM with Rails
+      [--rails-new-options=RAILS_NEW_OPTIONS]  # Options for rails new
+                                               # Default: -fBJST
+  -V, [--verbose], [--no-verbose]              
+
+Generate project scaffolding.
+```
+
+Examples:
+
+```
+$ grape new app
+      inside  ./app
+      create    app/Gemfile
+         run    bundle install --path vendor/bundle --without production from "./app"
+      create  app/lib/tasks/routes.rake
+      create  app/config/boot.rb
+      create  app/config/environment.rb
+      create  app/app/apis/errors.rb
+      create  app/app/apis/app_api.rb
+   identical  app/Gemfile
+      create  app/config.ru
+      create  app/Rakefile
+      create  app/log/.keep
+      create  app/app/apis/resources/.keep
+$ cd app/
+$ tree -I vendor
+.
+├── Gemfile
+├── Gemfile.lock
+├── Rakefile
+├── app
+│   └── apis
+│       ├── app_api.rb
+│       ├── errors.rb
+│       └── resources
+├── config
+│   ├── boot.rb
+│   └── environment.rb
+├── config.ru
+├── lib
+│   └── tasks
+│       └── routes.rake
+└── log
+
+7 directories, 9 files
+$ rake routes
+       Verb URI Pattern
+       GET  /(.:format)
 ```
 
 ## Development
