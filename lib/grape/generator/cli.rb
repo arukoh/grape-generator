@@ -35,12 +35,9 @@ module Grape
           work_dir = current_dir.join(name)
         end
 
-        params = build_params(work_dir, app_name)
+        params = { app: {name: app_name} }
         Dir[File.join(template_base, "**", "{*.*,.keep}")].each do |src|
           dst = Pathname.new src.sub(template_base, work_dir.to_path)
-          if dst.basename.to_path == "app_api.rb.erb"
-            dst = dst.dirname.join("#{params[:app][:name_underscore]}_api.rb.erb")
-          end
           template(src, dst.sub_ext("").to_path, params)
         end
 
@@ -51,16 +48,17 @@ module Grape
 
           Dir[File.join(template_rails, "**", "{*.*,.keep}")].each do |src|
             dst = Pathname.new src.sub(template_rails, work_dir.to_path)
-            if dst.basename.to_path == "app_api.rb.erb"
-              dst = dst.dirname.join("#{params[:app][:name_underscore]}_api.rb.erb")
-            end
             dst_path = dst.sub_ext("").to_path
             template(src, dst_path, params.merge(force: :true))
           end
 
           inside(work_dir, @config) do
-            exec(["mv #{setup_dir.to_path} #{rails_dir.to_path}", "bundle install" ])
+            exec(["mv #{setup_dir.to_path} #{rails_dir.to_path}"])
           end
+        end
+
+        inside(work_dir, @config) do |dst|
+          exec([ "bundle install --path vendor/bundle --without production" ])
         end
       rescue
         puts $!.backtrace
@@ -98,18 +96,6 @@ module Grape
         end
 
         def build_params(work_dir, app_name)
-          params = { app: {name: app_name} }
-          inside(work_dir, @config) do |dst|
-            template(File.join(template_base, "Gemfile.erb"), work_dir.join("Gemfile").to_path)
-            exec([ "bundle install --path vendor/bundle --without production" ])
-            params[:app][:name_classify], params[:app][:name_underscore] = run_ruby(
-              [
-                "require 'active_support'",
-                "require 'active_support/core_ext'",
-                "puts '#{app_name}'.classify + ',' + '#{app_name}'.underscore"
-              ]).split(',')
-          end
-          params
         end
 
         def database_gem_entry(database)

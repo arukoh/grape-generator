@@ -1,14 +1,13 @@
-<% name = config[:app][:name_classify] %>
 #!/usr/bin/env rackup
 require File.expand_path("../config/boot", __FILE__)
 
 require "active_support"
 logger = ActiveSupport::Logger.new("log/#{ENV["RACK_ENV"]}.log")
 logger.level = ENV["RACK_ENV"] == "production" ? Logger::INFO : Logger::DEBUG
-use <%= name %>::AppLogger, logger
+use API::AppLogger, logger
 
 ActiveRecord::Base.logger = logger
 ActiveRecord::Base.schema_format = :sql
 use ActiveRecord::ConnectionAdapters::ConnectionManagement
 
-run <%= name %>::API
+run API::Base

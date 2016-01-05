@@ -6,7 +6,7 @@ Bundler.require(:default, ENV["RACK_ENV"].to_sym)
 
 Dir[File.expand_path('../../app/models/*.rb', __FILE__)].each{|f| require f }
 
-module <%= config[:app][:name_classify] %>
+module API
   class AppLogger < Rack::CommonLogger
     def initialize(app, logger)
       super
@@ -20,6 +20,6 @@ module <%= config[:app][:name_classify] %>
 end
 $LOAD_PATH.unshift(File.expand_path("../../lib", __FILE__))
 $LOAD_PATH.unshift(File.expand_path("../../app/apis", __FILE__))
-require '<%= config[:app][:name_underscore] %>_api'
+require 'base'
 
 require_relative 'environment'

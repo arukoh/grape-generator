@@ -1,7 +1,7 @@
 require_relative 'concerns/error_handler'
 
-module <%= config[:app][:name_classify] %>
-  class API < Grape::API
+module API
+  class Base < Grape::API
     include ErrorHandler
 
     content_type :json, 'application/json'
