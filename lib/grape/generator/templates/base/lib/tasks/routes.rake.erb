@@ -4,7 +4,7 @@ desc "API Routes"
 task routes: :environment do
   Route = Struct.new(:verb, :path)
   routes = [Route.new("Verb", "URI Pattern")]
-  <%= config[:app][:name_classify] %>::API.routes.each do |route|
+  API::Base.routes.each do |route|
     routes << Route.new(route.route_method, route.route_path)
   end
   max_verb_size = routes.max_by{|r| r.verb.size}.verb.size
